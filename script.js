@@ -60,13 +60,20 @@ function renderEpisodes(container, title, seasons) {
       checkbox.type = 'checkbox';
       checkbox.checked = isChecked || false;
 
+      const episodeTitle = document.createElement('span');
+      episodeTitle.textContent = `Ep ${ep.Episode}: ${ep.Title}`;
+      if (isChecked) {
+        episodeTitle.classList.add('watched');
+      }
+
       checkbox.addEventListener('change', () => {
         watchedEpisodes[epId] = checkbox.checked;
+        episodeTitle.classList.toggle('watched', checkbox.checked);
         saveWatchlist();
       });
 
       label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(`Ep ${ep.Episode}: ${ep.Title}`));
+      label.appendChild(episodeTitle);
       episodeList.appendChild(label);
     });
 
@@ -149,7 +156,7 @@ async function renderList() {
     });
     li.appendChild(removeBtn);
 
-    // Episode toggle only for series
+    // Episode tracker toggle for series
     if (item.type === 'series') {
       const episodeContainer = document.createElement('div');
       episodeContainer.classList.add('episode-container', 'hidden');

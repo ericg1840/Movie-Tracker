@@ -320,5 +320,8 @@ body {
       width: 100%;
     }
   }
-        
+  .watched {
+    text-decoration: line-through;
+    color: gray;
+  }        
   
