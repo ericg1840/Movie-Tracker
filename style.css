@@ -323,5 +323,45 @@ body {
   .watched {
     text-decoration: line-through;
     color: gray;
-  }        
+  }
+  /* Dark mode styles */
+body.dark {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  body.dark a,
+  body.dark h1,
+  body.dark h2,
+  body.dark h3,
+  body.dark p,
+  body.dark span,
+  body.dark label,
+  body.dark .rating,
+  body.dark .episode-item {
+    color: #ffffff;
+  }
+  
+  /* Optional: update background colors of buttons and inputs */
+  body.dark .remove-btn,
+  body.dark .episode-toggle,
+  body.dark .season-toggle {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+  }
+  
+  body.dark .search-result {
+    background-color: #222;
+    color: #fff;
+    border-bottom: 1px solid #444;
+  }
+  
+  body.dark input,
+  body.dark textarea {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #555;
+  }
+          
   
