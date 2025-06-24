@@ -1,0 +1,324 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin: 0;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  #searchInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  #refreshButton {
+    background-color: #0077cc;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  
+  #refreshButton:hover {
+    background-color: #005fa3;
+  }
+  
+  #watchlist {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+  }
+  
+  .watchlist-item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    flex-wrap: wrap;
+  }
+  
+  .watchlist-content {
+    padding-right: 100px; /* Leave space on the right for remove button */
+  }
+  
+  .poster-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .poster-container img {
+    width: 100px;
+    height: 150px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  
+  .watchlist-item p {
+    list-style: none;
+    margin-left: 0;
+    margin: 4px 0 12px 0;
+    font-size: 0.95em;
+    color: #444;
+  }
+  
+  .watchlist-item p strong {
+    color: #111;
+  }
+  
+  .ratings {
+    margin-top: 10px;
+    font-size: 0.95em;
+    color: #555;
+  }
+  
+  .rating {
+    margin-bottom: 4px;
+  }
+  
+  .search-result {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .search-result:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Remove button styles */
+  .remove-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    z-index: 10;
+  }
+  
+  .remove-btn:hover {
+    background-color: #c0392b;
+  }
+  .watchlist-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+  }
+  body.dark {
+    background-color: #181818;
+    color: #f1f1f1;
+  }
+  
+  body.dark .watchlist-item {
+    background-color: #242424;
+  }
+  
+  .switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+    margin-bottom: 10px;
+  }
+  .switch input {
+    display: none;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 24px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.3s;
+  }
+  .slider:before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    background-color: white;
+    border-radius: 50%;
+    left: 3px;
+    top: 3px;
+    transition: 0.3s;
+  }
+  input:checked + .slider {
+    background-color: #66bb6a;
+  }
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  .dark-toggle-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  
+  .dark-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  
+  .dark-label input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: background-color 0.3s;
+  }
+  
+  .slider::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    top: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+  
+  input:checked + .slider {
+    background-color: #4caf50;
+  }
+  
+  input:checked + .slider::before {
+    transform: translateX(20px);
+  }
+  
+  .label-text {
+    font-size: 0.95em;
+    color: #333;
+  }
+  
+  /* Dark mode styles */
+  body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+  
+  body.dark .watchlist-item {
+    background-color: #1e1e1e;
+  }
+  
+  body.dark .label-text {
+    color: #f1f1f1;
+  }
+  .episode-toggle {
+    margin-top: 12px;
+    margin-bottom: 8px;
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+  
+  .episode-container {
+    margin-top: 10px;
+    padding-left: 12px;
+    border-left: 3px solid #ccc;
+  }
+  
+  .season {
+    margin-bottom: 10px;
+  }
+  
+  .season-toggle {
+    background: #eee;
+    border: none;
+    padding: 6px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .episode-list {
+    margin-top: 4px;
+    padding-left: 10px;
+  }
+  
+  .episode-item {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  .watchlist-columns {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .column h2 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .watchlist-columns {
+      flex-direction: column;
+    }
+  
+    .column {
+      width: 100%;
+    }
+  }
+        
+  

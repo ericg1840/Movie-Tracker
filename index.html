@@ -2,17 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Movie & TV Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <div class="dark-toggle-wrapper">
+        <label class="dark-label">
+          <input type="checkbox" id="darkToggle" />
+          <span class="slider"></span>
+          <span class="label-text">Dark Mode</span>
+        </label>
+      </div>
   <div class="container">
     <h1>🎬 Movie & TV Tracker</h1>
-    <input type="text" id="searchInput" placeholder="Search for a movie or TV show..." />
+    <input type="text" id="searchInput" placeholder="Search for a Movie or TV show..." />
     <div id="searchResults"></div>
     <button id="refreshButton">🔄 Refresh Info</button>
-    <ul id="watchlist"></ul>
+    <div class="watchlist-columns">
+        <div class="column">
+          <h2>🎬 Movies</h2>
+          <ul id="movieList"></ul>
+        </div>
+        <div class="column">
+          <h2>📺 TV Shows</h2>
+          <ul id="tvList"></ul>
+        </div>
+      </div>
   </div>
   <script src="script.js"></script>
 </body>

@@ -1,17 +1,14 @@
-const list = document.getElementById('watchlist');
+const movieList = document.getElementById('movieList');
+const tvList = document.getElementById('tvList');
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
 
 let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
-async function fetchMovieData(title) {
-  const res = await fetch(`https://www.omdbapi.com/?apikey=d9e07c32&t=${encodeURIComponent(title)}`);
-  const data = await res.json();
-  return data;
-}
+let watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes')) || {};
 
 function saveWatchlist() {
   localStorage.setItem('watchlist', JSON.stringify(watchlist));
+  localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
 }
 
 function createStars(imdbRating) {
@@ -20,12 +17,75 @@ function createStars(imdbRating) {
   return '⭐'.repeat(stars) + ` (${ratingOutOf10}/10)`;
 }
 
+async function fetchShowEpisodes(title) {
+  const res = await fetch(`https://www.omdbapi.com/?apikey=d9e07c32&t=${encodeURIComponent(title)}&type=series`);
+  const data = await res.json();
+  const totalSeasons = parseInt(data.totalSeasons) || 1;
+  const seasons = [];
+
+  for (let s = 1; s <= totalSeasons; s++) {
+    const seasonRes = await fetch(`https://www.omdbapi.com/?apikey=d9e07c32&t=${encodeURIComponent(title)}&Season=${s}`);
+    const seasonData = await seasonRes.json();
+    if (seasonData.Response === 'True') {
+      seasons.push(seasonData);
+    }
+  }
+
+  return seasons;
+}
+
+function renderEpisodes(container, title, seasons) {
+  seasons.forEach(season => {
+    const seasonDiv = document.createElement('div');
+    seasonDiv.classList.add('season');
+
+    const header = document.createElement('button');
+    header.textContent = `Season ${season.Season}`;
+    header.classList.add('season-toggle');
+    header.addEventListener('click', () => {
+      episodeList.classList.toggle('hidden');
+    });
+
+    const episodeList = document.createElement('div');
+    episodeList.classList.add('episode-list');
+
+    season.Episodes.forEach(ep => {
+      const epId = `${title}-S${season.Season}E${ep.Episode}`;
+      const isChecked = watchedEpisodes[epId];
+
+      const label = document.createElement('label');
+      label.classList.add('episode-item');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = isChecked || false;
+
+      checkbox.addEventListener('change', () => {
+        watchedEpisodes[epId] = checkbox.checked;
+        saveWatchlist();
+      });
+
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(`Ep ${ep.Episode}: ${ep.Title}`));
+      episodeList.appendChild(label);
+    });
+
+    seasonDiv.appendChild(header);
+    seasonDiv.appendChild(episodeList);
+    container.appendChild(seasonDiv);
+  });
+}
+
 async function renderList() {
-  list.innerHTML = '';
+  movieList.innerHTML = '';
+  tvList.innerHTML = '';
 
   for (const item of watchlist) {
     const li = document.createElement('li');
     li.classList.add('watchlist-item');
+
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('watchlist-content');
 
     const posterContainer = document.createElement('div');
     posterContainer.classList.add('poster-container');
@@ -39,19 +99,19 @@ async function renderList() {
 
     posterContainer.appendChild(img);
     posterContainer.appendChild(title);
-    li.appendChild(posterContainer);
+    contentDiv.appendChild(posterContainer);
 
     const plot = document.createElement('p');
     plot.textContent = item.plot;
-    li.appendChild(plot);
+    contentDiv.appendChild(plot);
 
     const director = document.createElement('p');
     director.innerHTML = `<strong>Director:</strong> ${item.director}`;
-    li.appendChild(director);
+    contentDiv.appendChild(director);
 
     const actors = document.createElement('p');
     actors.innerHTML = `<strong>Actors:</strong> ${item.actors}`;
-    li.appendChild(actors);
+    contentDiv.appendChild(actors);
 
     const ratingsContainer = document.createElement('div');
     ratingsContainer.classList.add('ratings');
@@ -69,17 +129,64 @@ async function renderList() {
 
         ratingsContainer.appendChild(ratingDiv);
       });
-    } else {
-      ratingsContainer.textContent = 'No ratings available';
     }
 
-    li.appendChild(ratingsContainer);
-    list.appendChild(li);
+    contentDiv.appendChild(ratingsContainer);
+
+    const runtime = document.createElement('p');
+    runtime.innerHTML = `<strong>Runtime:</strong> ${item.runtime || 'N/A'}`;
+    contentDiv.appendChild(runtime);
+
+    li.appendChild(contentDiv);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.classList.add('remove-btn');
+    removeBtn.addEventListener('click', () => {
+      watchlist = watchlist.filter(w => w.title !== item.title);
+      saveWatchlist();
+      renderList();
+    });
+    li.appendChild(removeBtn);
+
+    // Episode toggle only for series
+    if (item.type === 'series') {
+      const episodeContainer = document.createElement('div');
+      episodeContainer.classList.add('episode-container', 'hidden');
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.textContent = '📺 Show Episodes';
+      toggleBtn.classList.add('episode-toggle');
+
+      let hasLoadedEpisodes = false;
+
+      toggleBtn.addEventListener('click', async () => {
+        if (!hasLoadedEpisodes) {
+          const seasons = await fetchShowEpisodes(item.title);
+          renderEpisodes(episodeContainer, item.title, seasons);
+          hasLoadedEpisodes = true;
+        }
+        episodeContainer.classList.toggle('hidden');
+        toggleBtn.textContent = episodeContainer.classList.contains('hidden')
+          ? '📺 Show Episodes'
+          : '📺 Hide Episodes';
+      });
+
+      li.appendChild(toggleBtn);
+      li.appendChild(episodeContainer);
+    }
+
+    if (item.type === 'series') {
+      tvList.appendChild(li);
+    } else {
+      movieList.appendChild(li);
+    }
   }
 }
 
 async function addToWatchlist(title) {
-  const data = await fetchMovieData(title);
+  const res = await fetch(`https://www.omdbapi.com/?apikey=d9e07c32&t=${encodeURIComponent(title)}`);
+  const data = await res.json();
   if (data.Response === 'True') {
     watchlist.push({
       title: data.Title,
@@ -88,7 +195,9 @@ async function addToWatchlist(title) {
       plot: data.Plot,
       ratings: data.Ratings,
       director: data.Director,
-      actors: data.Actors
+      actors: data.Actors,
+      runtime: data.Runtime,
+      type: data.Type
     });
     saveWatchlist();
     renderList();
@@ -129,7 +238,7 @@ document.getElementById('refreshButton').addEventListener('click', async () => {
   const updatedWatchlist = [];
 
   for (const item of watchlist) {
-    const data = await fetchMovieData(item.title);
+    const data = await fetch(`https://www.omdbapi.com/?apikey=d9e07c32&t=${encodeURIComponent(item.title)}`);
     if (data.Response === 'True') {
       updatedWatchlist.push({
         title: data.Title,
@@ -138,7 +247,9 @@ document.getElementById('refreshButton').addEventListener('click', async () => {
         plot: data.Plot,
         ratings: data.Ratings,
         director: data.Director,
-        actors: data.Actors
+        actors: data.Actors,
+        runtime: data.Runtime,
+        type: data.Type
       });
     } else {
       updatedWatchlist.push(item);
@@ -148,6 +259,10 @@ document.getElementById('refreshButton').addEventListener('click', async () => {
   watchlist = updatedWatchlist;
   saveWatchlist();
   renderList();
+});
+
+document.getElementById('darkToggle').addEventListener('change', (e) => {
+  document.body.classList.toggle('dark', e.target.checked);
 });
 
 renderList();
