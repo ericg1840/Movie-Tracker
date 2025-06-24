@@ -363,5 +363,136 @@ body.dark {
     color: #fff;
     border: 1px solid #555;
   }
-          
+  .profile-section {
+    position: absolute;
+  top: 70px; /* below header */
+  right: 20px;
+  background-color: #f5f5f5;
+  padding: 1em;
+  border-radius: 8px;
+  width: 260px;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-section input {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .profile-section .stats {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+  
+  #resetDataBtn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .content {
+    display: flex;
+    padding: 20px;
+    padding-right: 300px; /* makes space for profile on the right */
+  }
+  .mark-season {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  .personal-rating {
+    margin-top: 10px;
+  }
+  
+  .stars-container .star {
+    font-size: 20px;
+    color: #ccc;
+    margin-right: 5px;
+  }
+  
+  .stars-container .star.filled {
+    color: gold;
+  }
+  .personal-rating {
+    margin-top: 10px;
+  }
+  
+  .stars-container .star {
+    font-size: 20px;
+    color: #ccc;
+    margin-right: 5px;
+    user-select: none;
+  }
+  
+  .stars-container .star.filled {
+    color: gold;
+    text-shadow: 0 0 2px #b8860b;
+  }
+  
+  #recommendations {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  #recommendations li {
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  #recommendations button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #recommendations button:hover {
+    background-color: #45a049;
+  }
+  #profileSection {
+    margin-bottom: 2rem;
+  }
+  
+  #recommendationsSection {
+    /* any needed styling */
+  }
+  #recommendations li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  #recommendations button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #recommendations button:hover {
+    background-color: #45a049;
+  }
+  
   
